@@ -1,0 +1,48 @@
+<!-- public/customer_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room List</title>
+</head>
+<body>
+    <h2>Room List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Price per Day</th>
+                <th>Occupancy</th>
+                <th>Air Conditioning</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="room-list">
+            <!-- Customer data will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <br><br>
+    <!-- <a href="/add-customer">Add New Customer</a> -->
+
+    <script>
+        // Fetch customers and render them
+        fetch('/get-rooms')
+            .then(response => response.json())
+            .then(rooms => {
+                // alert(JSON.stringify(rooms));
+                const tableBody = document.getElementById('room-list');
+                rooms.forEach(room => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${room.room_number}</td>
+                        <td>${room.price_per_day}</td>
+                        <td>${room.room_occupancy}</td>
+                        <td>${room.air_con ? 'Yes' : 'No'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+    </script>
+</body>
+</html>

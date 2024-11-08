@@ -1,0 +1,53 @@
+<!-- public/customer_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+</head>
+<body>
+    <h2>Customer List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>House No</th>
+                <th>Locality</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Pincode</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="customer-list">
+            <!-- Customer data will be inserted here dynamically -->
+        </tbody>
+    </table>
+    <br><br>
+    <!-- <a href="/add-customer">Add New Customer</a> -->
+
+    <script>
+        // Fetch customers and render them
+        fetch('/get-customers')
+            .then(response => response.json())
+            .then(customers => {
+                const tableBody = document.getElementById('customer-list');
+                customers.forEach(customer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${customer.name}</td>
+                        <td>${customer.email}</td>
+                        <td>${customer.house_no}</td>
+                        <td>${customer.locality}</td>
+                        <td>${customer.city}</td>
+                        <td>${customer.state}</td>
+                        <td>${customer.pincode}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Booking System</title>
+    <!-- Link to Bootstrap CSS (v5.1) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Room Booking System</h1>
+
+        <!-- Navigation Links -->
+        <div class="row my-3">
+            <div class="col">
+                <a href="/rooms" class="btn btn-primary w-100">View Rooms</a>
+            </div>
+            <div class="col">
+                <a href="/add-booking" class="btn btn-primary w-100">Add Booking</a>
+            </div>
+            <div class="col">
+                <a href="/customers" class="btn btn-primary w-100">View Customers</a>
+            </div>
+            <!-- logout -->
+            <div class="col">
+                <a href="/logout" class="btn btn-primary w-100">Logout</a>
+            </div>
+        </div>
+
+        <!-- Display Booking List -->
+        <h2 class="mt-5">Bookings</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Booking ID</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Room Number</th>
+                    <th scope="col">Check-In</th>
+                    <th scope="col">Check-Out</th>
+                    <th scope="col">Facilities</th>
+                </tr>
+            </thead>
+            <tbody id="bookingsTable">
+                <!-- Booking data will be inserted here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Link to Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // // Fetch rooms and bookings from the backend API and render them in the table
+        // async function fetchRooms() {
+        //     const response = await fetch('/rooms');
+        //     const rooms = await response.json();
+        //     const roomsTable = document.getElementById('roomsTable');
+
+        //     rooms.forEach(room => {
+        //         const row = document.createElement('tr');
+        //         row.innerHTML = `
+        //             <td>${room[0]}</td>
+        //             <td>${room[2]}</td>
+        //             <td>${room[4]}</td>
+        //             <td>$${room[3]}</td>
+        //             <td>${room[1] ? 'Yes' : 'No'}</td>
+        //         `;
+        //         roomsTable.appendChild(row);
+        //     });
+        // }
+
+        async function fetchBookings() {
+            const response = await fetch('/get-bookings');
+            const bookings = await response.json();
+            const bookingsTable = document.getElementById('bookingsTable');
+
+            bookings.forEach(booking => {
+                // alert(JSON.stringify(booking));
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${booking.id}</td>
+                    <td>${booking.customer_name}</td>   
+                    <td>${booking.room_number}</td>
+                    <td>${new Date(booking.checkin).toLocaleString()}</td>
+                    <td>${new Date(booking.checkout).toLocaleString()}</td>
+                    <td>
+                        ${booking.gym ? 'gym' : ''}
+                        ${booking.pool ? 'pool' : ''}
+                        ${booking.food ? 'food' : ''}
+                        </td>
+                `;
+                bookingsTable.appendChild(row);
+            });
+        }
+
+        // Initialize by fetching data
+        window.onload = function () {
+            // fetchRooms();
+            fetchBookings();
+        };
+    </script>
+</body>
+
+</html>

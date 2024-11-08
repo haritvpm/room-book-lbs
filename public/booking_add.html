@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Add New Booking</h1>
+        <form id="bookingForm" action="/add-booking" method="POST">
+            <!-- Customer Selection -->
+            <div class="mb-3">
+                <label for="customer" class="form-label">Select Customer</label>
+                <select class="form-select" id="customer" name="customer_id" required>
+                    <!-- Customer options will be populated here -->
+                </select>
+            </div>
+
+            <!-- Room Selection -->
+            <div class="mb-3">
+                <label for="room" class="form-label">Select Room</label>
+                <select class="form-select" id="room" name="room_id" required>
+                    <!-- Room options will be populated here -->
+                </select>
+            </div>
+
+            <!-- Check-In Date -->
+            <div class="mb-3">
+                <label for="checkInDate" class="form-label">Check-In Date</label>
+                <input type="date" class="form-control" id="checkInDate" name="checkin" required>
+            </div>
+
+            <!-- Check-Out Date -->
+            <div class="mb-3">
+                <label for="checkOutDate" class="form-label">Check-Out Date</label>
+                <input type="date" class="form-control" id="checkOutDate" name="checkout" required>
+            </div>
+
+            <!-- Additional Services -->
+            <h3>Additional Services</h3>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="food" name="food" value="food">
+                <label class="form-check-label" for="food">Food Service</label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="gym" name="gym" value="gym">
+                <label class="form-check-label" for="gym">Gym Access</label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="pool" name="pool" value="pool">
+                <label class="form-check-label" for="pool">Pool Access</label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Add Booking</button>
+            <!-- cancel -->
+            <a href="/home" class="btn btn-primary">Cancel</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fetch existing customers and rooms from the backend and populate the dropdowns
+        async function populateCustomersAndRooms() {
+            try {
+                // Fetch customers
+                const customerResponse = await fetch('/get-customers');
+                const customers = await customerResponse.json();
+                const customerSelect = document.getElementById('customer');
+                
+                customers.forEach(customer => {
+                    const option = document.createElement('option');
+                    option.value = customer.id; // Assuming `id` is the unique identifier
+                    option.text = customer.name; // Assuming `name` is the customer name
+                    customerSelect.appendChild(option);
+                });
+
+                // Fetch rooms
+                const roomResponse = await fetch('/get-rooms');
+                const rooms = await roomResponse.json();
+                const roomSelect = document.getElementById('room');
+                
+                rooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.id; // Assuming `id` is the unique identifier
+                    option.text = `Room ${room.room_number} - ${room.room_occupancy} Occupancy`; // Display room details
+                    roomSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching customers or rooms:', error);
+            }
+        }
+
+        // Initialize by populating customers and rooms
+        window.onload = populateCustomersAndRooms;
+    </script>
+</body>
+</html>
